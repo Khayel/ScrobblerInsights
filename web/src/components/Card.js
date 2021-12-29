@@ -19,6 +19,7 @@ function Card(props){
         setDisplayMode( (prevState) =>  (prevState === 'maximized') ?  'expanded' : 'maximized')
     }
 
+
     let displayIcon = <IoChevronUp/>
     if(displayMode ==='expanded'){ displayIcon = <IoChevronDown/>}else{ displayIcon = <IoChevronUp/>}
     
@@ -29,13 +30,7 @@ function Card(props){
                 </div>
                 <div className="lower">
                 <span className={"content " +  displayMode}>
-                    <ul>
-                    {
-                    props.content.map( (track, index) => 
-                        <li key={track[4]} className={(displayMode ==='expanded' && index > 2) ? 'list-item-expanded': ''}><span className="date">{track[3]}</span> - <span className="track">{track[0]}</span> by <span className="artist">{track[1]}</span></li>
-                    )
-                    }
-                </ul>
+                    {props.content}
                      </span><br></br>
                 </div>
             </div>
