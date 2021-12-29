@@ -7,9 +7,9 @@ function Timeline() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [trackList, settracks] = useState([]);
   const [sortby, setSortby] = useState('year');
-  const [sortedList, setSortedList] = useState([]);
+  const [sortedList, setSortedList] = useState({});
   
-  useEffect( () => {organizeCards()}, [isLoaded]);
+  useEffect( () => {setSortedList(organizeCards())}, [isLoaded]);
  // useEffect( () =>{ aggTrackList()},[sortby]);
   
   
@@ -29,7 +29,8 @@ function Timeline() {
     
             }
            )
-           setSortedList(sortedObj)
+           setSortedList(sortedObj);
+           console.log(sortedList)
            break;
         //   //isolate appropriate date string in this case day and create a list of tracks...
           
@@ -63,7 +64,7 @@ function Timeline() {
 
   const getUserTracks = (username)=>{
     setError(null)
-    fetch(`http://10.0.0.67:5001/user/khayelc`,
+    fetch(`http://192.168.1.65:5001/user/khayelc`,
     { headers : { 
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -71,10 +72,8 @@ function Timeline() {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result)
-          console.log(result['tracks_played'])
           settracks(result['tracks_played']);
-          aggTrackList();
+          // aggTrackList();
          setIsLoaded(true);
          setSortby('year')
         },
@@ -88,6 +87,7 @@ function Timeline() {
         })};
   
   function organizeCards(){
+    console.log("organizing...")
     let sortedObj = {};
     trackList.forEach( (track) => {
       let dateVal = new Date(track[3]).toDateString().split(' ');
@@ -109,11 +109,10 @@ function Timeline() {
     sortedObj[year][month][day].push(track);
     
   })
-    console.log(sortedObj)
-
-    setSortedList(sortedObj)
+    console.log(sortedObj);
+    return sortedObj;
 }
-  
+
 
   const newCard =  <div className="Timeline">
   {(!isLoaded) ?
@@ -124,14 +123,60 @@ function Timeline() {
     [<SortMenu setSort={ (selected) => {setSortby(selected)}}/>,
       <div className="timelineContainer">  
           <div className="trackList">
-            
-            {(isLoaded) ?
-              // Object.entries(sortedList).map( ([timeVal,track]) => (<Card className="card" displayMode={sortby} key={track[4]}  timestamp={timeVal} content={track}/> )):
-               sortedList.map( (item) => (
+            {/* {
+            Object.keys(sortedList).map( (year) => (
+              <div className="year">
+                <Card content={year}/>
+                {Object.keys(sortedList[year]).map( (month) => (
+                <div className="month">
+                  <Card content={month}/>
+                  {Object.keys(sortedList[year][month]).map( (day) => (
+                    <div className="day">
+                    <Card content={day}/>
+                    <ul>
+                    {Object.entries(sortedList[year][month][day]).map( (track) => (
+                      track
+                      ))}
+                    </ul>
+                    </div>
+                  ))}
+                  </div>
+                ))}
+                </div>
+            ))} */}
 
-               ))
+
+            {/* NESTED CARD ELEMENTS */}
+              {
+            Object.keys(sortedList).map( (year) => (
+              <div className="year">
+                <Card timestamp={year} content=
+                {Object.keys(sortedList[year]).map( (month) => (
+                <div className="month">
+                  <Card timestamp={month} content=
+                  {Object.keys(sortedList[year][month]).map( (day) => (
+                    <div className="day">
+                    <Card timestamp={day} content={
+                    (<ul>
+                      
+                    {Object.entries(sortedList[year][month][day]).map( (track) => (
+                      <li>{track}</li>
+                      ))}
+                     
+                    </ul>)}/>
+                    </div>
+                  ))}/>
+                  </div>
+                ))}/>
+                </div>
+            ))}
+          
+            {/* {(isLoaded) ?
+              // Object.entries(sortedList).map( ([timeVal,track]) => (<Card className="card" displayMode={sortby} key={track[4]}  timestamp={timeVal} content={track}/> )):
+               sortedList.map( (item) => (<Card className="card" content={item}/>))
+               :
                <div></div>
-    }
+    } */}
   {(error) ? <div>Error: {error.message}</div>: <div></div> }
     </div>
   </div>
