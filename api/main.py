@@ -1,12 +1,10 @@
 # TODO user case to create a scrobbler account
 # TODO visualize data in tableau
 # TODO embed tableau dashboard
-#FIXME remove case sensitivity for usernames
 from os import fsencode
-from flask import Flask, request, redirect, jsonify
+from flask import Flask, jsonify
 from flask.templating import render_template
 import scrobbler
-import json
 app = Flask(__name__)
 
 
@@ -16,14 +14,10 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/gethistory")
-def get_play_history():
-    trackList = scrobbler.create_list()
-    return str(trackList)
-
 
 @app.route('/user/<username>')
 def get_username(username):
+    username = username.lower()
     user_id = scrobbler.is_existing_user(username)
     if user_id:
         scrobbler.update_recent_tracks_incremental(username, user_id)
@@ -47,4 +41,4 @@ def after_request(response):
 
 
 if __name__=="__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host="0.0.0.0", port=5001)

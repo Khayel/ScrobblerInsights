@@ -63,7 +63,7 @@ function Timeline() {
 
   const getUserTracks = (username)=>{
     setError(null)
-    fetch(`http://10.0.0.67:5001/user/khayelc`,
+    fetch(`http://192.168.1.65:5001/user/khayelc`,
     { headers : { 
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -112,6 +112,7 @@ function Timeline() {
     console.log(sortedObj)
 
     setSortedList(sortedObj)
+    console.log(sortedList)
 }
   
 
@@ -125,13 +126,13 @@ function Timeline() {
       <div className="timelineContainer">  
           <div className="trackList">
             
-            {(isLoaded) ?
+            {/* {(isLoaded) ?
               // Object.entries(sortedList).map( ([timeVal,track]) => (<Card className="card" displayMode={sortby} key={track[4]}  timestamp={timeVal} content={track}/> )):
                sortedList.map( (item) => (
 
                ))
                <div></div>
-    }
+    } */}
   {(error) ? <div>Error: {error.message}</div>: <div></div> }
     </div>
   </div>
