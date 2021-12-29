@@ -1,0 +1,248 @@
+
+
+
+h1{
+  color: white;
+}
+li{
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 0.5 em;
+}
+
+.App {
+  background-color: #140830;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #ffffff;
+  /* background: linear-gradient(-45deg, #f72585, #b5179e, #7209B7, #560BAD,
+  #480CA8, #3A0CA3, #3F37C9, #4361EE, #4895EF, #4CC9F0 ); */
+	background-size: cover;
+	animation: gradient 15s ease infinite;
+	height: 100%;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+
+.Timeline{
+  margin: 60px;
+}
+
+
+.username-input {
+  border: none;
+  border-bottom: 2px solid rgb(204, 0, 255);
+  color: white;
+  background: linear-gradient(-45deg, #f72585, #b5179e, #7209B7, #560BAD,
+  #480CA8, #3A0CA3, #3F37C9, #4361EE, #4895EF, #4CC9F0 );
+  width: 100%;
+  height: 100%;
+  padding-top: 1em;
+  font-size: 24px;
+  font-weight: bolder;
+
+}
+
+
+.username-input::placeholder{
+  color: white;
+  width: 100%;
+  height: 100%;
+  
+}
+.trackList{
+  border-style: solid 2px;
+  padding: none;
+  border-color: white;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  
+  flex-wrap: wrap;
+  justify-content:space-evenly;
+  height: fit-content;
+}
+.listTrack{
+  border-radius: 5em;
+}
+.username-form{
+  width: 100%;
+  height: 100%;
+}
+ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+}
+
+.card{
+  /* background: radial-gradient( #f72585, #b5179e, #7209B7, #560BAD,
+  #480CA8, #3A0CA3, #3F37C9, #4361EE, #4895EF, #4CC9F0 ); */
+  background: white;
+  border-radius: 0.3em;
+  margin: 0.5em;
+  width: 700px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+  -webkit-transition: all 0.1s linear 0s;
+  transition: all 0.1s linear 0s;
+}
+
+.card:nth-child(5n+1) {
+  background:  radial-gradient(#1fe4f5, #3fbafe);
+}
+
+.card:nth-child(5n+2) {
+  background: radial-gradient(#fbc1cc, #fa99b2);
+}
+
+.card:nth-child(5n+3) {
+  background: radial-gradient(#76b2fe, #b69efe);
+}
+
+.card:nth-child(5n+4) {
+  background: radial-gradient(#60efbc, #58d5c9);
+}
+
+.card:nth-child(5n+5) {
+  background: radial-gradient(#f588d8, #c0a3e5);
+}
+
+.card-default{
+  height: 50px;
+}
+.card-expanded{
+  height: 200px;
+
+}
+.card-maximized{
+  width: 700px;
+}
+
+ .upper{
+  border-top-left-radius:0.2em; 
+  border-top-right-radius:0.8em;
+  text-align: center;
+
+} 
+
+.lower{
+  text-align: left;
+}
+
+.artistname{
+  font-size: 0.5em;
+}
+
+.sortmenu{
+  display: flex;
+}
+.choice{
+  display:inline-block;
+  padding:0.35em 1.2em;
+  border:0.1em solid #FFFFFF;
+  margin:0 0.3em 0.3em 0;
+  border-radius:0.2em;
+  box-sizing: border-box;
+  text-decoration:none;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  color:#FFFFFF;
+  text-align:center;
+  transition: all 0.2s;
+  }
+  .choice:hover{
+    color:#000000; 
+    background-color:#FFFFFF;
+  }
+  .choice-selected{
+    color:#000000; 
+    background-color:#FFFFFF;
+  }
+
+
+  .navbar{
+    z-index: 999;
+    top:0;
+    height: 60px;
+    width: 100%;
+    position: fixed;
+    color: white;
+    background-color: #000000e8;
+    display: flex;
+    justify-content: space-between;
+  }
+  .navbar > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .navbar-minimized{
+    position: fixed;
+    z-index: 999;
+    top: 0px;
+    width: 100%;
+    background-color: blue;
+  }
+
+  .right-items{
+    display: flex;
+    gap: 30px;
+    justify-content: flex-end;
+  }
+  .left-items{
+    display: flex;
+    gap: 30px;
+    justify-content: flex-start;
+  }
+ 
+.minimized>ul>li{
+  display: none;
+  transition: all 1s;
+}
+.expanded{
+  transition: all 1s;
+}
+.list-item-expanded{
+  display: none;
+}
+
+.trackList::before{
+  background: red;
+  content: '';
+  position: absolute;
+  left: 0px;
+  width: 4px;
+  height:in;
+}
+
+.card::before{
+  content: '';
+  background: red;
+  position: absolute;
+  transform: translate(-19px,17px)rotate(45deg);
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+
+.hline{
+justify-self: right;
+}
+.timelineContainer{
+  display: grid;
+  grid-template-columns: auto auto;
+}

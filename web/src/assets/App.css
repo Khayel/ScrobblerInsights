@@ -1,175 +1,105 @@
-
-
-
+.App{
+  background-color: #140830;
+  height: 100vh;
+}
 h1{
-  color: black;
+  color: white;
 }
-li{
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 0.5 em;
+.navbar{
+  z-index: 999;
+  top:0;
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  color: white;
+  background-color: #000000e8;
+  display: flex;
+  justify-content: space-between;
 }
-.App {
-  background-color: black;
-  min-height: 100vh;
+.navbar > div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.navbar-minimized{
+  position: fixed;
+  z-index: 999;
+  top: 0px;
+  width: 100%;
+  background-color: blue;
+}
+
+.right-items{
+  display: flex;
+  gap: 30px;
+  justify-content: flex-end;
+}
+.left-items{
+  display: flex;
+  gap: 30px;
+  justify-content: flex-start;
+}
+
+.Timeline{
+  margin-top: 60px;
+}
+
+.usernameForm{
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
+  align-items: center;
 }
 
-@keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+.card{
+  /* background: radial-gradient( #f72585, #b5179e, #7209B7, #560BAD,
+  #480CA8, #3A0CA3, #3F37C9, #4361EE, #4895EF, #4CC9F0 ); */
+  background: white;
+  border-radius: 0.3em;
+  margin: 0.5em;
+  width: 700px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+  -webkit-transition: all 0.1s linear 0s;
+  transition: all 0.1s linear 0s;
 }
 
-
-.username-input {
-  border: none;
-  border-bottom: 2px solid black;
-  color: white;
-  background-color: rgba(255, 255, 255, 0.1);
-  width: 100%;
-  height: 100%;
-  padding: 1em;
-  text-align: center;
-
+.card:nth-child(5n+1) {
+  background:  radial-gradient(#1fe4f5, #3fbafe);
 }
 
+.card:nth-child(5n+2) {
+  background: radial-gradient(#fbc1cc, #fa99b2);
+}
 
-.username-input::placeholder{
-  color: white;
-  width: 100%;
-  height: 100%;
-  
+.card:nth-child(5n+3) {
+  background: radial-gradient(#76b2fe, #b69efe);
 }
-.trackList{
-  border-style: solid 2px;
-  padding: none;
-  border-color: white;
-  display: grid;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content:space-evenly;
+
+.card:nth-child(5n+4) {
+  background: radial-gradient(#60efbc, #58d5c9);
 }
-.listTrack{
-  border-radius: 5em;
-}
-.username-form{
-  width: 100%;
-  height: 100%;
-}
-ul {
-  list-style-type: none; /* Remove bullets */
-  padding: 0; /* Remove padding */
-  margin: 0; /* Remove margins */
-}
-h1{
-  color: white;
+
+.card:nth-child(5n+5) {
+  background: radial-gradient(#f588d8, #c0a3e5);
 }
 
 .card-default{
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 1em;
-  margin: 0.5em;
   height: 50px;
-  width: 700px;
 }
 .card-expanded{
-  border-radius: 1em;
-  margin: 0.5em;
   height: 200px;
-  width: 700px;
 
 }
 .card-maximized{
-  border-radius: 1em;
-  margin: 0.5em;
   width: 700px;
 }
-
 .upper{
-  background: rgba(255, 255, 255, 0.3);
   border-top-left-radius:0.2em; 
   border-top-right-radius:0.8em;
+  text-align: center;
 
-}
-
-.lower{
-  text-align: left;
-}
-
-.artistname{
-  font-size: 0.5em;
-}
-
-.sortmenu{
-  display: flex;
-}
-.choice{
-  display:inline-block;
-  padding:0.35em 1.2em;
-  border:0.1em solid #FFFFFF;
-  margin:0 0.3em 0.3em 0;
-  border-radius:0.2em;
-  box-sizing: border-box;
-  text-decoration:none;
-  font-family:'Roboto',sans-serif;
-  font-weight:300;
-  color:#FFFFFF;
-  text-align:center;
-  transition: all 0.2s;
-  }
-  .choice:hover{
-    color:#000000; 
-    background-color:#FFFFFF;
-  }
-  .choice-selected{
-    color:#000000; 
-    background-color:#FFFFFF;
-  }
-
-
-  .navbar{
-    z-index: 999;
-    top:0;
-    height: 60px;
-    width: 100%;
-    position: fixed;
-    background-color: black;
-    display: flex;
-    justify-content: space-between;
-  }
-  .navbar-minimized{
-    position: fixed;
-    z-index: 999;
-    top: 0px;
-    width: 100%;
-    background-color: blue;
-  }
-
-  .right-items{
-    display: flex;
-    gap: 30px;
-    justify-content: flex-end;
-  }
-  .left-items{
-    display: flex;
-    gap: 30px;
-    justify-content: flex-start;
-  }
- 
+} 
 .minimized>ul>li{
   display: none;
   transition: all 1s;

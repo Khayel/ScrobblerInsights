@@ -23,7 +23,7 @@ function Card(props){
     if(displayMode ==='expanded'){ displayIcon = <IoChevronDown/>}else{ displayIcon = <IoChevronUp/>}
     
         return (
-            <div className={(displayMode === 'minimized') ? "card-default" : "card-" + displayMode} onMouseEnter={expandCard} onMouseLeave={minimizeCard} onClick={maximizeCard} >
+            <div className={(displayMode === 'minimized') ? "card card-default" : "card card-" + displayMode} onMouseEnter={expandCard} onMouseLeave={minimizeCard} onClick={maximizeCard} >
                 <div className="upper">
                 <span className="timestamp">{props.timestamp}</span>{displayIcon}
                 </div>
@@ -32,7 +32,7 @@ function Card(props){
                     <ul>
                     {
                     props.content.map( (track, index) => 
-                        <li key={track[4]} className={(displayMode ==='expanded' && index > 2) ? 'list-item-expanded': ''}>{track[3]} - {track[0]} by {track[1]}</li>
+                        <li key={track[4]} className={(displayMode ==='expanded' && index > 2) ? 'list-item-expanded': ''}><span className="date">{track[3]}</span> - <span className="track">{track[0]}</span> by <span className="artist">{track[1]}</span></li>
                     )
                     }
                 </ul>

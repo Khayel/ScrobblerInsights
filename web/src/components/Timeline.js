@@ -6,10 +6,11 @@ function Timeline() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [trackList, settracks] = useState([]);
-  const [sortby, setSortby] = useState('');
+  const [sortby, setSortby] = useState('year');
   const [sortedList, setSortedList] = useState([]);
   
-  useEffect( () =>{ aggTrackList()},[sortby]);
+  useEffect( () => {organizeCards()}, [isLoaded]);
+ // useEffect( () =>{ aggTrackList()},[sortby]);
   
   
   const aggTrackList = () => {
@@ -62,7 +63,7 @@ function Timeline() {
 
   const getUserTracks = (username)=>{
     setError(null)
-    fetch(`http://192.168.1.72:5000/user/${username}`,
+    fetch(`http://10.0.0.67:5001/user/khayelc`,
     { headers : { 
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -75,7 +76,7 @@ function Timeline() {
           settracks(result['tracks_played']);
           aggTrackList();
          setIsLoaded(true);
-         setSortby('day')
+         setSortby('year')
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -85,19 +86,84 @@ function Timeline() {
           setIsLoaded(true);
           setError(error);
         })};
-  return (
-    <div className="Timeline">
-    <h1> Your timeline</h1>
-        {(!isLoaded) ? <UserForm onSubmit={getUserTracks}/> :
-          <SortMenu setSort={ (selected) => {setSortby(selected)}}/>
-          }
+  
+  function organizeCards(){
+    let sortedObj = {};
+    trackList.forEach( (track) => {
+      let dateVal = new Date(track[3]).toDateString().split(' ');
+      let year = dateVal[3];
+      let month = dateVal[1];
+      let day = dateVal[2];
 
-      <div className="trackList">
-        {(isLoaded) ?  Object.entries(sortedList).map( ([timeVal,track]) => (<Card className="card" displayMode={sortby} key={track[4]}  timestamp={timeVal} content={track}/> )): <div></div>
-        }
-      {(error) ? <div>Error: {error.message}</div>: <div></div> }
 
-      </div>
-  </div>);
+      if (!(year in sortedObj)){
+        sortedObj[year] = {}
+      }
+      if (!(month in sortedObj[year])){
+        sortedObj[year][month] = {}
+      }
+      if (!(day in sortedObj[year][month])){
+        sortedObj[year][month][day] = []
+      }
+      
+    sortedObj[year][month][day].push(track);
+    
+  })
+    console.log(sortedObj)
+
+    setSortedList(sortedObj)
+}
+  
+
+  const newCard =  <div className="Timeline">
+  {(!isLoaded) ?
+  <div className="usernameForm">
+      <h1>type in your username to get started</h1>
+      <UserForm onSubmit={getUserTracks}/>
+  </div> :
+    [<SortMenu setSort={ (selected) => {setSortby(selected)}}/>,
+      <div className="timelineContainer">  
+          <div className="trackList">
+            
+            {(isLoaded) ?
+              // Object.entries(sortedList).map( ([timeVal,track]) => (<Card className="card" displayMode={sortby} key={track[4]}  timestamp={timeVal} content={track}/> )):
+               sortedList.map( (item) => (
+
+               ))
+               <div></div>
+    }
+  {(error) ? <div>Error: {error.message}</div>: <div></div> }
+    </div>
+  </div>
+  ]
+}
+</div>;
+
+
+
+
+
+return (newCard
+  //   <div className="Timeline">
+    
+  //       {(!isLoaded) ?
+  //       <div className="usernameForm">
+  //           <h1>type in your username to get started</h1>
+  //           <UserForm onSubmit={getUserTracks}/>
+  //       </div> :
+  //         [<SortMenu setSort={ (selected) => {setSortby(selected)}}/>,
+  //           <div className="timelineContainer">  
+  //               <div className="trackList">
+  //                 {(isLoaded) ?
+  //                   Object.entries(sortedList).map( ([timeVal,track]) => (<Card className="card" displayMode={sortby} key={track[4]}  timestamp={timeVal} content={track}/> )):
+  //                    <div></div>
+  //         }
+  //       {(error) ? <div>Error: {error.message}</div>: <div></div> }
+  //         </div>
+  //       </div>
+  //       ]
+  //     }
+  // </div>
+  );
 }
 export default Timeline;
