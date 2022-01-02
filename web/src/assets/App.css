@@ -43,6 +43,9 @@ h1{
 
 .Timeline{
   margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .usernameForm{
@@ -57,6 +60,7 @@ h1{
   #480CA8, #3A0CA3, #3F37C9, #4361EE, #4895EF, #4CC9F0 ); */
   background: white;
   border-radius: 0.3em;
+  border: 5px solid black;
   margin: 0.5em;
   width: 700px;
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
@@ -85,11 +89,14 @@ h1{
 }
 
 .card-default{
-  height: 50px;
+  height: 20vH;
 }
 .card-expanded{
-  height: 200px;
+  height: 50vh;
 
+}
+.card-minimized{
+  display: none;
 }
 .card-maximized{
   width: 700px;
@@ -138,17 +145,63 @@ h1{
   height: 200px;
 
 }
+.card-m
 
 
-.month{
-  display: flex;
+.cardYear{
+  height: 100vH;
+  width: 25vW;
 }
-.day{
-  
+.cardMonth{
+  height: 100vH/12;
+  width: auto;
+}
+.cardMonth>.lower>span{
+  display: flex;
+  flex-direction: row;
+  width: 50vW;
+  flex-wrap: wrap;
+}
+.cardDay{
   position: relative;
-  left: 700px;
+  width: 50px;
 }
 
-.month>.day-content{
-  display: flex;
+
+
+.lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  background: #fff;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%, 100% {
+    top: 24px;
+    height: 32px;
+  }
 }
