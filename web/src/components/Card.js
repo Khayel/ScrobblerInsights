@@ -1,46 +1,50 @@
-import React, {useState,useEffect} from "react"
+import React, {useState,useEffect, useRef} from "react"
 import {IoChevronDown, IoChevronUp} from "react-icons/io5"
+
 
 function Card(props){
     const [displayMode, setDisplayMode] = useState('minimized')
-    const [clickedinCard, setClicked] = useState(false)
 
-
-    const expandCard = (e)=>{
-        e.preventDefault();
-        if (props.cardType !== "cardYear"){
-        if (!clickedinCard){setDisplayMode('expanded')}
-    }}
-    const minimizeCard = (e) =>{
-        e.preventDefault();
-        if (props.cardType !== "cardYear"){
-        if (!clickedinCard){setDisplayMode('minimized')}
-    }}
     const maximizeCard = (e) =>{
         e.preventDefault();
-        setClicked( (prevState) => !prevState);
-        setDisplayMode( (prevState) =>  (prevState === 'maximized') ?  'expanded' : 'maximized')
+        if (props.cardType !== "cardYear"){
+        setDisplayMode('maximized')
+        }
     }
 
-
+  let cardRef= useRef();
+  useEffect( () => {
+      let handler = (event)=> {
+          if (!cardRef.current.contains(event.target)){
+              setDisplayMode('minimized');
+          }
+      };
+      document.addEventListener("mousedown",handler)
+      return () =>{
+          document.removeEventListener("mousedown", handler)
+      }
+  })
     let displayIcon = <IoChevronUp/>
+   
 
     useEffect( ()=> {
         if (props.cardType === "cardYear"){
-            setDisplayMode('expanded')
+            setDisplayMode('maximized')
+    
         }
+
     }, [])
-    if(displayMode ==='expanded'){ displayIcon = <IoChevronDown/>}else{ displayIcon = <IoChevronUp/>}
+    if(displayMode ==='maximized'){ displayIcon = <IoChevronDown/>}else{ displayIcon = <IoChevronUp/>}
     
         return (
-            <div className={(displayMode === 'minimized') ? `card card-default ${props.cardType}`  : `card card-${displayMode} ${props.cardType}`} onMouseEnter={expandCard} onMouseLeave={minimizeCard} onClick={maximizeCard} >
+            <div ref={cardRef} className={`card ${props.cardType} card-${displayMode} `}  onClick={maximizeCard} >
                 <div className="upper">
                 <span className="timestamp">{props.timestamp}</span>{displayIcon}
                 </div>
                 <div className="lower">
-                <span className={`content ${displayMode}`}>
+                <div className={`content ${displayMode}`}>
                     {props.content}
-                     </span><br></br>
+                     </div><br></br>
                 </div>
             </div>
         )

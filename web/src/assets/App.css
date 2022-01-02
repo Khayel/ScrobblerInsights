@@ -1,6 +1,6 @@
 .App{
   background-color: #140830;
-  height: 100vh;
+  height: 100vH;
 }
 h1{
   color: white;
@@ -42,7 +42,7 @@ h1{
 }
 
 .Timeline{
-  margin-top: 60px;
+  padding-top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -88,31 +88,37 @@ h1{
   background: radial-gradient(#f588d8, #c0a3e5);
 }
 
-.card-default{
-  height: 20vH;
-}
 .card-expanded{
-  height: 50vh;
+  height: fit-content;
 
 }
-.card-minimized{
-  display: none;
-}
 .card-maximized{
-  width: 700px;
+  height: fit-content;
 }
 .upper{
   border-top-left-radius:0.2em; 
   border-top-right-radius:0.8em;
   text-align: center;
 
+
+
 } 
+.trackList{
+  display: flex;
+  flex-direction: column-reverse;
+}
 .minimized{
   display: none;
   transition: all 1s;
 }
 .expanded{
-  transition: all 1s;
+  transition: all 5s;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 60vW;
+  height: 20vW;
+  
 }
 .list-item-expanded{
   display: none;
@@ -145,30 +151,67 @@ h1{
   height: 200px;
 
 }
-.card-m
+.timelineContainer{
+  width:80vw;
+}
 
 
 .cardYear{
-  height: 100vH;
-  width: 25vW;
+  height: auto;
+  width: 80vw;
 }
-.cardMonth{
-  height: 100vH/12;
-  width: auto;
-}
-.cardMonth>.lower>span{
+.cardYear>.lower>.content{
   display: flex;
   flex-direction: row;
-  width: 50vW;
   flex-wrap: wrap;
+  justify-content: center;
 }
+
+
+.cardMonth{
+  height: auto;
+  width: 18vw;
+
+}
+
+.cardMonth.card-maximized{
+  position:fixed;
+  top:10vh;
+  width: 60vW;
+  
+}
+.cardMonth.card-maximized>.lower>.content{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: fit-content;
+  
+}
+
+
 .cardDay{
-  position: relative;
-  width: 50px;
+  height: auto;
+  width: 5vW;
+}
+.cardDay.card-maximized{
+  position:absolute;
+  top:100px;
+  left: 100px;
+  width: 40vW;
+  
+}
+.cardDay.card-maximized>.lower>.content{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  
 }
 
 
 
+/* LOADING BAR */
 .lds-facebook {
   display: inline-block;
   position: relative;
@@ -203,5 +246,83 @@ h1{
   50%, 100% {
     top: 24px;
     height: 32px;
+  }
+}
+
+ul, li {
+  list-style: none;
+  padding: 0;
+}
+.tracklistContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+  background: linear-gradient(45deg, #209cff, #68e0cf);
+  padding: 3rem 0;
+}
+.tracklistWrapper {
+  background: #eaf6ff;
+  padding: 2rem;
+  border-radius: 15px;
+}
+h1 {
+  font-size: 1.1rem;
+  font-family: sans-serif;
+}
+.tracksPlayed {
+  margin-top: 2rem;
+  border-radius: 12px;
+  position: relative;
+}
+li {
+  padding-bottom: 1.5rem;
+  border-left: 1px solid #abaaed;
+  position: relative;
+  padding-left: 20px;
+  margin-left: 10px;
+}
+li:last-child {
+  border: 0px;
+  padding-bottom: 0;
+}
+li:before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background: white;
+  border: 1px solid #4e5ed3;
+  box-shadow: 3px 3px 0px #bab5f8;
+  box-shadow: 3px 3px 0px #bab5f8;
+  border-radius: 50%;
+  position: absolute;
+  left: -10px;
+  top: 0px;
+}
+.time {
+  color: #2a2839;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+@media screen and (min-width: 601px) {
+  .time {
+    font-size: 0.9rem;
+  }
+}
+@media screen and (max-width: 600px) {
+  .time {
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+  }
+}
+p {
+  color: #4f4f4f;
+  font-family: sans-serif;
+  line-height: 1.5;
+  margin-top: 0.4rem;
+}
+@media screen and (max-width: 600px) {
+  p {
+    font-size: 0.9rem;
   }
 }
