@@ -64,7 +64,7 @@ function Timeline() {
 
   const getUserTracks = (username)=>{
     setError(null)
-    fetch(`http://192.168.1.65:5001/user/khayelc`,
+    fetch(`http://192.168.1.72:5000/user/khayelc`,
     { headers : { 
       'Content-Type': 'application/json',
       'Accept': 'application/json'
