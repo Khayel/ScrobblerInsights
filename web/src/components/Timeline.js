@@ -87,7 +87,6 @@ function Timeline() {
   function organizeCards(){
     console.log("organizing...")
     let sortedObj = {};
-    let templist = [];
     trackList.forEach( (track) => {
       let dateVal = new Date(track['date']).toDateString().split(' ');
       let year = parseInt(dateVal[3]);
