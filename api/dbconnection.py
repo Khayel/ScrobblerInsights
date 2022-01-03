@@ -88,7 +88,10 @@ class DB_connection():
             conn.commit()
             conn.close()
             #FIXME return a dict instead
-            return [(*track[:3],track[3].strftime("%d %b %Y, %H:%M"),track[4]) for track in result]
+            return [{'id': track[4],
+            'name': track[0],
+            'artist': track[1],
+            'date': track[3].strftime("%d %b %Y, %H:%M")} for track in result]
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
             return None

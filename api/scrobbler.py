@@ -49,7 +49,7 @@ def get_track_info(track):
 
 
 def update_recent_tracks_incremental(username,user_id):
-    #TODO only updated if not updated for x minutes in user_id find create last updated column... create a last checked column for the user
+    #TODO only updated if not updated for x minutes in user_id find create last updated column...
     print(f"Updating track list for user {username}")
     conn = db.DB_connection()
     recent_track = conn.get_most_recent_track(username)
@@ -123,3 +123,14 @@ def create_list():
     
     conn = db.DB_connection()
     return conn.get_all_tracks()
+
+
+if __name__ == "__main__":
+    #recent_tracks = get_recent_tracks_full()
+    #tracks = recent_tracks['recenttracks']['track']
+    #print(tracks)
+    #print(type(tracks))
+
+    # db.update_tracks_played(tracks)
+
+    result = get_recent_tracks_incremental('khayelc')
