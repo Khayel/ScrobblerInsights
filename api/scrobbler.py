@@ -8,9 +8,10 @@ import requests
 import pandas as pd
 import dbconnection as db
 from datetime import datetime
-API_KEY = "8f17f6e08c0b52d7a6e0388750ca746b"
-SECRET = "c14bdb3a0b57d7504fb55ac43dde48d0"
-USER = "khayelc"
+import threading
+import base64
+
+
 
 
 def get_recent_tracks_full(username):
@@ -64,6 +65,7 @@ def update_recent_tracks_incremental(username,user_id):
         print(
             f"There are {num_pages} pages")
         new_tracks = []
+        artists = []
         for page in range(1, int(num_pages)+1):
             print("on page: " + str(page))
             r = requests.get(
@@ -73,14 +75,24 @@ def update_recent_tracks_incremental(username,user_id):
                 if track['name'] == recent_track_fix[0] and track['artist']['#text'] == recent_track_fix[1] and track['date']['#text'] == recent_track_fix[2]:
                     print(f"Found at index {ind} on page {page}...getting list of tracks before and excluding recent track.")
                     new_tracks += tracks_on_page[:ind]
+                    artists += [artist['artist']['#text'] for artist in tracks_on_page]
                     if new_tracks:
                         conn.update_tracks_played(new_tracks,user_id)
+                        #only care about unique artist to improve speed of genre gathering...
+                        #TODO update tracksp playes should be updated to use artist_id...
+                        artists = set(artists)
+                        #this takes time so do in another thread...
+                        th = threading.Thread(target=get_genres(artists))
+                        th.start()
                         return True
                     else:
                         print("No new tracks...")
                         return False
-
             new_tracks += tracks_on_page
+    #update get corresponding genre via spotify api
+    #auth
+
+   
     return False
 
 def is_existing_user(username):
@@ -124,7 +136,39 @@ def create_list():
     conn = db.DB_connection()
     return conn.get_all_tracks()
 
+def get_genres(artists):
+    print("getting genres....")
+    base64_auth = base64.b64encode(f'{SPOTIFY_CLIENT_ID}:{SPOTIFY_SECRET}'.encode()).decode()
+    auth_headers = {
+        'Authorization': f'Basic {base64_auth}',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    auth_payload = {
+    'grant_type': 'client_credentials'
+    }
+    auth_request = requests.post('https://accounts.spotify.com/api/token',data=auth_payload, headers=auth_headers).json()
+    auth_token = auth_request['access_token']
 
+    headers = { 'Authorization': f'Bearer {auth_token}'}
+    
+    artist_information = {artist: {'genres': []} for artist in artists}
+    #get spotify id of artists
+    for artist in artists:
+        artist_request = requests.get(f"https://api.spotify.com/v1/search?limit=1&type=artist&q={artist.replace(' ','%20')}",headers=headers).json()
+        artist_information[artist] = {'genres': artist_request['artists']['items'][0]['genres']}
+    
+    conn = db.DB_connection()
+    for artist in artist_information:
+        conn.update_genres(artist, artist_information[artist]['genres'])
+        
+    print(auth_request)
+
+    #TODO verify if artist or genre is new in artist and genre tables...
+    #if new then enter in to table
+    #into entries table create new record with id of genre and artist.
+
+    #should modify songs played to use artist_id...
+    #for genres by day, join tracks played with the artistgenre based on artist and then get genres using genre id
 if __name__ == "__main__":
     #recent_tracks = get_recent_tracks_full()
     #tracks = recent_tracks['recenttracks']['track']
@@ -132,5 +176,4 @@ if __name__ == "__main__":
     #print(type(tracks))
 
     # db.update_tracks_played(tracks)
-
-    result = get_recent_tracks_incremental('khayelc')
+    get_genres(['Childish Gambino'])

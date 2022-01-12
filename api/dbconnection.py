@@ -109,7 +109,53 @@ class DB_connection():
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
             return None
-        
+    def update_genres(self, artist, genres):
+        #TODO insert artist and genre, if not exists in artist/genre table, get ID
+        try:
+            conn = self.connect()
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO public.artist(name) VALUES (%s) RETURNING id;",(artist,))
+            a_id = cursor.fetchone()[0]
+        #already exists
+        except psycopg2.IntegrityError:
+            print("Already exists")
+            conn = self.connect()
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM public.artist WHERE name =%s;",(artist,))
+            a_id = cursor.fetchone()[0]
+            artist_exists = True
+        finally:
+            conn.commit()
+            conn.close()
+
+
+        g_ids = []
+        for genre in genres:#try threading here?
+            try:
+                conn = self.connect()
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO public.genre(name) VALUES (%s) RETURNING id",(genre,))
+                g_ids.append(cursor.fetchone()[0])
+            except:
+                print("Already exists")
+                conn = self.connect()
+                cursor = conn.cursor()
+                cursor.execute("SELECT id FROM public.artist WHERE name =%s;",(artist,))
+                g_ids.append(cursor.fetchone()[0])
+            finally:
+                conn.commit()
+                conn.close()
+
+
+        #TODO insert into artist_genres a_id and g_id for every g_id
+        if not artist_exists:
+            for g_id in g_ids:
+                conn = self.connect()
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO public.artist_genres(a_id,g_id) VALUES (%s,%s)",(a_id,g_id))
+                conn.commit()
+                conn.close()
+        return None
 if __name__=="__main__":
     db = DB_connection()
     db.is_existing_user('khayelc')

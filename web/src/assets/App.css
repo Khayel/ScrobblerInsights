@@ -68,26 +68,6 @@ h1{
   transition: all 0.1s linear 0s;
 }
 
-.card:nth-child(5n+1) {
-  background:  radial-gradient(#1fe4f5, #3fbafe);
-}
-
-.card:nth-child(5n+2) {
-  background: radial-gradient(#fbc1cc, #fa99b2);
-}
-
-.card:nth-child(5n+3) {
-  background: radial-gradient(#76b2fe, #b69efe);
-}
-
-.card:nth-child(5n+4) {
-  background: radial-gradient(#60efbc, #58d5c9);
-}
-
-.card:nth-child(5n+5) {
-  background: radial-gradient(#f588d8, #c0a3e5);
-}
-
 .card-expanded{
   height: fit-content;
 
@@ -199,14 +179,15 @@ h1{
   top:100px;
   left: 100px;
   width: 40vW;
+  max-height: 50vH;
+  overflow: scroll;
   
 }
 .cardDay.card-maximized>.lower>.content{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
-  
+  justify-content: center;  
 }
 
 

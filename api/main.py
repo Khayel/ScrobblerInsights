@@ -2,11 +2,13 @@
 # TODO visualize data in tableau
 # TODO embed tableau dashboard
 #FIXME remove case sensitivity for usernames
-from os import fsencode
-from flask import Flask, request, redirect, jsonify
+from flask import Flask, request, redirect, jsonify,session
 from flask.templating import render_template
 import scrobbler
+import requests
 import json
+import base64
+import uuid
 app = Flask(__name__)
 
 
@@ -37,6 +39,7 @@ def get_username(username):
     return response
 
 
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -47,4 +50,5 @@ def after_request(response):
 
 
 if __name__=="__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.secret_key = 'jdsakfdsjklvnselg'
+    app.run(debug=True, host='0.0.0.0', port=5001)
