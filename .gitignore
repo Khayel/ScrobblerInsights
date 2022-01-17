@@ -6282,3 +6282,4 @@ api/__pycache__/main.cpython-39.pyc
 api/__pycache__/scrobbler.cpython-39.pyc
 api/.vscode/settings.json
 api/requirements.txt
+.DS_Store
