@@ -1,6 +1,8 @@
+*{ box-sizing: border-box;}
 .App{
-  background-color: #140830;
-  height: 100vH;
+  background-color: #14171d;
+  color: #c0c5ce;
+
 }
 h1{
   color: white;
@@ -8,13 +10,16 @@ h1{
 .navbar{
   z-index: 999;
   top:0;
-  height: 60px;
+  height: 5vH;
   width: 100%;
   position: fixed;
   color: white;
-  background-color: #000000e8;
+  background-color: #14171d;
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid #202530;
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
 }
 .navbar > div{
   display: flex;
@@ -27,9 +32,20 @@ h1{
   z-index: 999;
   top: 0px;
   width: 100%;
-  background-color: blue;
 }
-
+.navbarChoice{
+  --border-color:#56c9aa;
+  --border-width: 1px;
+  --bottom-distance: 0px;
+  background-image: linear-gradient(var(--border-color), var(--border-color));
+  background-size: 0% var(--border-width);
+  background-repeat: no-repeat;
+  transition: 0.3s;
+  background-position: 0% calc(100% - var(--bottom-distance));
+}
+.navbarChoice:hover{
+  background-size: 100% var(--border-width);
+}
 .right-items{
   display: flex;
   gap: 30px;
@@ -42,155 +58,74 @@ h1{
 }
 
 .Timeline{
-  padding-top: 100px;
+  margin-top:5vH;
   display: flex;
+  height: 95vH;
   justify-content: center;
   align-items: center;
 }
 
-.usernameForm{
+.timelineContainer{
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: calc(100vH - 5vH);
+  width: 100vW;
+  padding: 2% 5%;
+  background-color: #14171d;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
 }
 
+.yearColumn{
+  width: 12%;
+
+  margin: none 2%;
+}
+.monthColumn{
+  width: 12%;
+  margin: none 2%;
+}
+.dayColumn{
+  width: 12%;
+  margin: none 2%;
+  overflow-y: auto;
+}
+.songList{
+  width: 64%;
+  overflow-y: auto;
+}
+.timestamp{
+  padding: 4px;
+}
+.selected{
+  background: linear-gradient( 
+    40deg
+    ,#206653,#56c9aa );
+}
 .card{
-  /* background: radial-gradient( #f72585, #b5179e, #7209B7, #560BAD,
-  #480CA8, #3A0CA3, #3F37C9, #4361EE, #4895EF, #4CC9F0 ); */
-  background: white;
-  border-radius: 0.3em;
-  border: 5px solid black;
-  margin: 0.5em;
-  width: 700px;
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
-  -webkit-transition: all 0.1s linear 0s;
-  transition: all 0.1s linear 0s;
+  --border-color:#56c9aa;
+  --border-width: 1px;
+  --bottom-distance: 4px;
+  background-image: linear-gradient(var(--border-color), var(--border-color));
+  background-size: 0% var(--border-width);
+  background-repeat: no-repeat;
+  transition: 0.3s;
+  background-position: 0% calc(100% - var(--bottom-distance));
 }
-
-.card-expanded{
-  height: fit-content;
-
+.card:hover{
+  background-size: 100% var(--border-width);
 }
 .card-maximized{
-  height: fit-content;
+  background: linear-gradient( 
+40deg
+,#206653,#56c9aa );
+
+}
+.vizContainer{
+  width:50vW;
 }
 .upper{
-  border-top-left-radius:0.2em; 
-  border-top-right-radius:0.8em;
-  text-align: center;
-
-
-
-} 
-.trackList{
-  display: flex;
-  flex-direction: column-reverse;
+  padding: 3%;
 }
-.minimized{
-  display: none;
-  transition: all 1s;
-}
-.expanded{
-  transition: all 5s;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 60vW;
-  height: 20vW;
-  
-}
-.list-item-expanded{
-  display: none;
-}
-
-.card:nth-child(5n+1) {
-  background:  radial-gradient(#1fe4f5, #3fbafe);
-}
-
-.card:nth-child(5n+2) {
-  background: radial-gradient(#fbc1cc, #fa99b2);
-}
-
-.card:nth-child(5n+3) {
-  background: radial-gradient(#76b2fe, #b69efe);
-}
-
-.card:nth-child(5n+4) {
-  background: radial-gradient(#60efbc, #58d5c9);
-}
-
-.card:nth-child(5n+5) {
-  background: radial-gradient(#f588d8, #c0a3e5);
-}
-
-.card-default{
-  height: 50px;
-}
-.card-expanded{
-  height: 200px;
-
-}
-.timelineContainer{
-  width:80vw;
-}
-
-
-.cardYear{
-  height: auto;
-  width: 80vw;
-}
-.cardYear>.lower>.content{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-
-.cardMonth{
-  height: auto;
-  width: 18vw;
-
-}
-
-.cardMonth.card-maximized{
-  position:fixed;
-  top:10vh;
-  width: 60vW;
-  
-}
-.cardMonth.card-maximized>.lower>.content{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  height: fit-content;
-  
-}
-
-
-.cardDay{
-  height: auto;
-  width: 5vW;
-}
-.cardDay.card-maximized{
-  position:absolute;
-  top:100px;
-  left: 100px;
-  width: 40vW;
-  max-height: 50vH;
-  overflow: scroll;
-  
-}
-.cardDay.card-maximized>.lower>.content{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;  
-}
-
-
 
 /* LOADING BAR */
 .lds-facebook {
@@ -235,15 +170,13 @@ ul, li {
   padding: 0;
 }
 .tracklistContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 0 1rem;
-  background: linear-gradient(45deg, #209cff, #68e0cf);
+  background-color: #14171d;
   padding: 3rem 0;
 }
 .tracklistWrapper {
   background: #eaf6ff;
+  background-color: #14171d;
   padding: 2rem;
   border-radius: 15px;
 }
@@ -258,10 +191,10 @@ h1 {
 }
 li {
   padding-bottom: 1.5rem;
-  border-left: 1px solid #abaaed;
+  border-left: 1px dashed #c0c5ce;
   position: relative;
   padding-left: 20px;
-  margin-left: 10px;
+  margin-left: 10%;
 }
 li:last-child {
   border: 0px;
@@ -271,10 +204,10 @@ li:before {
   content: '';
   width: 15px;
   height: 15px;
-  background: white;
-  border: 1px solid #4e5ed3;
-  box-shadow: 3px 3px 0px #bab5f8;
-  box-shadow: 3px 3px 0px #bab5f8;
+  background: #56c9aa;
+  border: 1px solid #56c9aa;
+  box-shadow: 3px 3px 0px #206653;
+  box-shadow: 3px 3px 0px #206653;
   border-radius: 50%;
   position: absolute;
   left: -10px;
@@ -306,4 +239,27 @@ p {
   p {
     font-size: 0.9rem;
   }
+}
+.timeline__time {
+  padding-right: 35vw;
+  font-size: 16px; 
+}
+.timeline__content{
+    text-align: left;
+  }
+.timeline__title {
+    padding-bottom: 15px;
+    padding-left: 12vW;
+    font-size: 24px; }
+
+.timeline__points {
+      padding-left: 12vW; }
+  
+.Insights{
+  width: 100vW;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }

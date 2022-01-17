@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useRef} from "react"
-import {IoChevronDown, IoChevronUp} from "react-icons/io5"
+import {IoChevronForwardOutline,IoEllipse, IoChevronUp} from "react-icons/io5"
 
 
 function Card(props){
@@ -10,6 +10,7 @@ function Card(props){
         if (props.cardType !== "cardYear"){
         setDisplayMode('maximized')
         }
+        props.isClicked(props.timestamp,props.cardType)
     }
 
   let cardRef= useRef();
@@ -24,7 +25,7 @@ function Card(props){
           document.removeEventListener("mousedown", handler)
       }
   })
-    let displayIcon = <IoChevronUp/>
+    let displayIcon = <IoChevronForwardOutline/>
    
 
     useEffect( ()=> {
@@ -34,17 +35,12 @@ function Card(props){
         }
 
     }, [])
-    if(displayMode ==='maximized'){ displayIcon = <IoChevronDown/>}else{ displayIcon = <IoChevronUp/>}
+    if(displayMode ==='maximized'){ displayIcon = <IoEllipse/>}else{ displayIcon = <IoChevronForwardOutline/>}
     
         return (
-            <div ref={cardRef} className={`card ${props.cardType} card-${displayMode} `}  onClick={maximizeCard} >
+            <div ref={cardRef} className={props.isSelected ? `card ${props.cardType} card-maximized `:`card ${props.cardType} card-${displayMode} `}  onClick={maximizeCard} >
                 <div className="upper">
-                <span className="timestamp">{props.timestamp}</span>{displayIcon}
-                </div>
-                <div className="lower">
-                <div className={`content ${displayMode}`}>
-                    {props.content}
-                     </div><br></br>
+                <span className="timestamp">{props.timestamp}   </span><span>{displayIcon}</span>
                 </div>
             </div>
         )
