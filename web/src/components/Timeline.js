@@ -8,62 +8,17 @@ function Timeline() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [trackList, settracks] = useState([]);
-  const [sortby, setSortby] = useState('year');
   const [sortedList, setSortedList] = useState({});
+  const [selectedYear, setSelectedYear] = useState(null)
+  const [selectedMonth, setSelectedMonth] = useState(null)
+  const [selectedDay, setSelectedDay] = useState(null)
+  const [isfinishedSort, setFinishedSort] = useState(false)
   
   useEffect( () => {setSortedList(organizeCards())}, [isLoaded]);
- // useEffect( () =>{ aggTrackList()},[sortby]);
-  
-  
-  // const aggTrackList = () => {
-  //   console.log("sortby changed" + isLoaded)
-  //   setSortedList([])
-  //   let sortedObj = {};
-  //   switch(sortby){
-  //     case 'day':
-  //       trackList.forEach( (track) => {
-  //          let dayVal = new Date(track[3]).toDateString();
-  //          (dayVal in sortedObj) ? sortedObj[dayVal].push(track) : sortedObj[dayVal] = [track];
-    
-  //           }
-  //          )
-  //          setSortedList(sortedObj);
-  //          console.log(sortedList)
-  //          break;
-  //       //   //isolate appropriate date string in this case day and create a list of tracks...
-          
-  //       //sort tracklist by day
-  //     case 'week':
-  //       //sort tracklist by month
-  //     case 'month':
-  //       trackList.forEach( (track) => {
-  //         let monthVal = new Date(track[3]).toDateString().split(' ');
-  //         let monthYear = monthVal[1] + monthVal[3];
-  //         (monthYear in sortedObj) ? sortedObj[monthYear].push(track) : sortedObj[monthYear] = [track];
-          
-  //       });
-        
-  //       setSortedList(sortedObj)
-  //       break;
-  //       //sort...
-  //     case 'year':
-  //       trackList.forEach( (track) => {
-  //         let yearVal = new Date(track[3]).toDateString().split(' ');
-  //         let year = yearVal[3];
-  //         (year in sortedObj) ? sortedObj[year].push(track) : sortedObj[year] = [track];
-          
-  //       })
-  //       setSortedList(sortedObj)
-  //       break;
-  //       //sort
-  //   }
-  //   console.log("finishyed sorted" + isLoaded)
-  // }
-
   
   useEffect(()=>{
     setError(null)
-      fetch(`http://192.168.1.65:5001/user/khayelc`,
+      fetch(`http://192.168.1.72:5001/user/khayelc`,
       { headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -109,41 +64,61 @@ function Timeline() {
   })
   
     console.log(sortedObj);
+    setFinishedSort(true)
     return sortedObj;
 }
 
+function updateSelectedDate(newDate,type){
+   switch(type){
+    case 'year':
+      setSelectedYear(newDate);
+      break;
+      case 'month':
+        setSelectedMonth(newDate);
+        break;
+      case 'day':
+          setSelectedDay(newDate);
+          break;
+  }
+}
+  
+function getTracks(){
+  return sortedList[selectedYear][selectedMonth][selectedDay]
+}
 return (
   <div className="Timeline">
-  {(!isLoaded) ?
+  {(!isLoaded) && (isfinishedSort) ?
   <div className="usernameForm">
     <div class="lds-facebook"><div></div><div></div><div></div></div>
   </div> :
    
       <div className="timelineContainer">  
-          <div className="trackList">
-              {
-            Object.keys(sortedList).map( (year) => (
-              <>
-                <Card key={Math.random()} timestamp={year} cardType="cardYear" content=
-                {Object.keys(sortedList[year]).map( (month) => (
-                <>
-                  <Card key={Math.random()} timestamp={month} cardType="cardMonth" content=
-                  {Object.keys(sortedList[year][month]).map( (day) => (
-                    <>
-                    <Card key={Math.random()} timestamp={day} cardType="cardDay" content={
-                    (
-                      <TrackList tracks={sortedList[year][month][day]}/>
-                     
-                    )}/>
-                    </>
-                  ))}/>
-                  </>
-                ))}/>
-                </>
-            ))}
+            <div className="yearColumn">
+                {Object.keys(sortedList).map( (year) =>(
+                  <Card key={year} cardType='year' isSelected={year === selectedYear ? 'true': ''} timestamp={year} isClicked={updateSelectedDate}/>
+                ))}
+            </div>
+
+            <div className="monthColumn">
+              {sortedList[selectedYear] && Object.keys(sortedList[selectedYear]).map( (month) => (
+                <Card key={month} cardType='month' isSelected={month === selectedMonth ? true : false}  timestamp={month} isClicked={updateSelectedDate}/>
+              ))}
+            </div>
+
+              <div className="dayColumn">
+                {(sortedList[selectedYear] && sortedList[selectedYear][selectedMonth]) && Object.keys(sortedList[selectedYear][selectedMonth]).map( (day) => (
+                <Card key={day} cardType='day' timestamp={day} isClicked={updateSelectedDate}/>
+              ))}
+            </div>   
+            <div className="songList">
+              {(sortedList[selectedYear] && sortedList[selectedYear][selectedMonth] && sortedList[selectedYear][selectedMonth][selectedDay]) &&
+              <TrackList key={Math.random()} tracks={getTracks()}/>
+  }
+            </div> 
+                
   {(error) ? <div>Error: {error.message}</div>: <div></div> }
     </div>
-  </div>
+
   
 }
 </div>

@@ -29,13 +29,13 @@ function Navbar(props){
     return(
     <nav className= {navbarStyle}>
         <div className="left-items">
-            <div onClick={()=>{props.changeMode('timeline')}}><IoTime/></div>
-            <div onClick={()=>{props.changeMode('insights')}}><IoStatsChartSharp/></div>
+            <div className="navbarChoice" onClick={()=>{props.changeMode('timeline')}}><IoTime/></div>
+            <div className="navbarChoice" onClick={()=>{props.changeMode('insights')}}><IoStatsChartSharp/></div>
         </div>
         <div>Listener Insights</div>
         <div className="right-items">
-              <div>About</div>
-            <div><IoLogoGithub/></div>
+              <div className="navbarChoice">About</div>
+            <div className="navbarChoice"><a href="https://github.com/Khayel"><IoLogoGithub/></a></div>
         </div>
 
       

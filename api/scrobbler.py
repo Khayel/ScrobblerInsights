@@ -65,7 +65,6 @@ def update_recent_tracks_incremental(username,user_id):
         print(
             f"There are {num_pages} pages")
         new_tracks = []
-        artists = []
         for page in range(1, int(num_pages)+1):
             print("on page: " + str(page))
             r = requests.get(
@@ -75,14 +74,14 @@ def update_recent_tracks_incremental(username,user_id):
                 if track['name'] == recent_track_fix[0] and track['artist']['#text'] == recent_track_fix[1] and track['date']['#text'] == recent_track_fix[2]:
                     print(f"Found at index {ind} on page {page}...getting list of tracks before and excluding recent track.")
                     new_tracks += tracks_on_page[:ind]
-                    artists += [artist['artist']['#text'] for artist in tracks_on_page]
                     if new_tracks:
+                        artists = [artist['artist']['#text'] for artist in new_tracks]
                         conn.update_tracks_played(new_tracks,user_id)
                         #only care about unique artist to improve speed of genre gathering...
                         #TODO update tracksp playes should be updated to use artist_id...
                         artists = set(artists)
                         #this takes time so do in another thread...
-                        th = threading.Thread(target=get_genres(artists))
+                        th = threading.Thread(target=get_genres, args=(set(artists),))
                         th.start()
                         return True
                     else:
@@ -161,7 +160,6 @@ def get_genres(artists):
     for artist in artist_information:
         conn.update_genres(artist, artist_information[artist]['genres'])
         
-    print(auth_request)
 
     #TODO verify if artist or genre is new in artist and genre tables...
     #if new then enter in to table

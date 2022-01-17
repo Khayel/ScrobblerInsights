@@ -116,6 +116,7 @@ class DB_connection():
             cursor = conn.cursor()
             cursor.execute("INSERT INTO public.artist(name) VALUES (%s) RETURNING id;",(artist,))
             a_id = cursor.fetchone()[0]
+            artist_exists = False
         #already exists
         except psycopg2.IntegrityError:
             print("Already exists")
