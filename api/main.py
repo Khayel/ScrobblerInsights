@@ -2,12 +2,11 @@
 # TODO visualize data in tableau
 # TODO embed tableau dashboard
 #FIXME remove case sensitivity for usernames
+from re import T
 from flask import Flask, request, redirect, jsonify,session
 from flask.templating import render_template
 import scrobbler
-import requests
-import json
-import base64
+import threading
 import uuid
 app = Flask(__name__)
 
@@ -26,16 +25,24 @@ def get_play_history():
 
 @app.route('/user/<username>')
 def get_username(username):
+    username = username.lower()
     user_id = scrobbler.is_existing_user(username)
+    #TODO is existing user should also return last update and only call update tracks if certain time elapsed.
+
     if user_id:
-        scrobbler.update_recent_tracks_incremental(username, user_id)
+        th_update_tracks_existing_user = threading.Thread(target=scrobbler.update_recent_tracks_incremental, args=((username,user_id)))
+        th_update_tracks_existing_user.start()
     else:
         try:
-            user_id = scrobbler.get_recent_tracks_full(username)
+            th_update_tracks_new_user = threading.Thread(target=scrobbler.get_recent_tracks_full, args=((username,)))
+            th_update_tracks_new_user.start()
+            return "New user please try again later while data is gathered"
+            # user_id = scrobbler.get_recent_tracks_full(username)
         except:
             return "Error"
-    response = jsonify({'username': username,
-            'tracks_played': scrobbler.get_played_tracks(user_id)})
+    response = {'username': username,
+                'user_id': user_id,
+            'tracks_played': scrobbler.get_played_tracks(user_id)}
     return response
 
 
@@ -44,7 +51,7 @@ def get_username(username):
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    response.headers.add('Access-Control-Allow-Methods', 'GET')
     return response
 
 

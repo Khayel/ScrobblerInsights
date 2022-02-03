@@ -11,30 +11,46 @@ from datetime import datetime
 import threading
 import base64
 
+API_KEY = "8f17f6e08c0b52d7a6e0388750ca746b"
+SECRET = "c14bdb3a0b57d7504fb55ac43dde48d0"
+SPOTIFY_CLIENT_ID = "6a2e3c67318242efada57ffb80ea4ec7"
+SPOTIFY_SECRET = "98638d4147bd4c3db49d3ab38759b9b7"
 
 
 
-def get_recent_tracks_full(username):
+def get_recent_tracks_full(username,user_id):
     #TODO add check for non existing user.
     conn = db.DB_connection()
-    user_id = conn.new_user(username)
     #FIXME implement return of new user of user id
     # user_id = conn.new_user(username)
     # only use for initial run.
     r = requests.get(
-        "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200".format(username, API_KEY))
-    results = r.json()
-    total_pages = results['recenttracks']['@attr']['totalPages']
-    print(f"There are {total_pages} pages")
-    for page in range(2, int(total_pages) + 1):
+            "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200".format(username, API_KEY))
+    num_pages = r.json()['recenttracks']['@attr']['totalPages']
+    print(
+            f"There are {num_pages} pages")
+    
+    for page in range(1, int(num_pages)+1):
         print("on page: " + str(page))
+        new_tracks = []
         r = requests.get(
-            "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200&page={}".format(username, API_KEY, page))
-        results['recenttracks']['track'] = results['recenttracks']['track'] + \
-            r.json()['recenttracks']['track']
-    print(len(results['recenttracks']['track']))
-    conn.update_tracks_played(results['recenttracks']['track'],user_id)
-    return user_id
+                "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200&page={}".format(username, API_KEY, page))
+        tracks_on_page = r.json()['recenttracks']['track']
+        for ind, track in enumerate(tracks_on_page):
+            new_tracks.append(track)
+        if new_tracks:
+                artists = [artist['artist']['#text'] for artist in new_tracks]
+                conn.update_tracks_played(new_tracks,user_id)
+                        #only care about unique artist to improve speed of genre gathering...
+                        #TODO update tracksp playes should be updated to use artist_id...
+                artists = set(artists)
+                        #this takes time so do in another thread...
+                th = threading.Thread(target=get_genres, args=(set(artists),))
+                th.start()
+        else:
+                print("No new tracks...")
+                return False 
+    return True
 
 
 def get_track_info(track):
@@ -47,6 +63,7 @@ def get_track_info(track):
         track_details = None
     track_info[track['name']] = track_details
     return track_info
+    
 
 
 def update_recent_tracks_incremental(username,user_id):
@@ -87,7 +104,7 @@ def update_recent_tracks_incremental(username,user_id):
                     else:
                         print("No new tracks...")
                         return False
-            new_tracks += tracks_on_page
+            new_tracks += track
     #update get corresponding genre via spotify api
     #auth
 
@@ -102,35 +119,7 @@ def get_played_tracks(user_id):
     conn = db.DB_connection()
     return conn.get_all_user_tracks(user_id)
 
-
-def output_csv(tracks_played, track_info):
-    """Given list of tracks played and track information, create a CSV using dataframes"""
-    df = pd.DataFrame(columns=['Track', 'Artist', 'Date'])
-
-    for track in tracks_played:
-        # add additional data required here.
-        try:
-            item = pd.DataFrame([[track['name'], track['artist']['#text'],
-                                track['date']['#text']]], columns=['Track', 'Artist', 'Date'])
-        except KeyError:
-            # FIXME if a track is currently playing, this exception should only be thrown once, but is thrown ~6 times
-            if 'date' not in track.keys():
-                print(f"{track['name']} is currently playing... getting current time")
-                curr_time = datetime.now()
-                item = pd.DataFrame([[track['name'], track['artist']['#text'], curr_time.strftime(
-                    "%d %b %Y, %H:%M")]], columns=['Track', 'Artist', 'Date'])
-        df = pd.concat([df, item], ignore_index=True)
-    print(df.to_string())
-    df.to_csv('playhistory.csv')
-
 def create_list():
-    global API_KEY
-    global SECRET
-    global USER
-
-    API_KEY = "8f17f6e08c0b52d7a6e0388750ca746b"
-    SECRET = "c14bdb3a0b57d7504fb55ac43dde48d0"
-    USER = "khayelc"
     
     conn = db.DB_connection()
     return conn.get_all_tracks()

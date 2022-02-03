@@ -5,7 +5,7 @@ function UserForm(props) {
   
     const onSubmit = (e) =>{
     e.preventDefault();
-    props.onSubmit(username);
+    props.getUsername(username)
     }
     
       return (

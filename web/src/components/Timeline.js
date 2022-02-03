@@ -4,7 +4,7 @@ import SortMenu from "./SortMenu";
 import React, {useEffect, useState} from "react"
 import TrackList from "./TrackList";
 
-function Timeline() {
+function Timeline({setUserId}) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [trackList, settracks] = useState([]);
@@ -26,8 +26,8 @@ function Timeline() {
         .then(res => res.json())
         .then(
           (result) => {
+            setUserId(result['user_id'])
             settracks(result['tracks_played']);
-            // aggTrackList();
            setIsLoaded(true);
            console.log(trackList)
             
@@ -118,25 +118,10 @@ return (
                 
   {(error) ? <div>Error: {error.message}</div>: <div></div> }
     </div>
-
-  
-}
+  }
 </div>
   );
 }
 export default Timeline;
 
 
-
-const obj = {
-  "2021": {
-    "Dec": {
-        "10": [1,2,3],
-        "11": [4,5,6]
-           },
-     "Nov": {
-        "10": [1,2,3],
-        "11": [4,5,6]
-           }
-        }
-}

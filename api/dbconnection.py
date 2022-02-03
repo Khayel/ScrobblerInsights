@@ -110,6 +110,7 @@ class DB_connection():
             print(error)
             return None
     def update_genres(self, artist, genres):
+        print(f"Inserting {artist}")
         #TODO insert artist and genre, if not exists in artist/genre table, get ID
         try:
             conn = self.connect()
@@ -147,7 +148,6 @@ class DB_connection():
                 conn.commit()
                 conn.close()
 
-
         #TODO insert into artist_genres a_id and g_id for every g_id
         if not artist_exists:
             for g_id in g_ids:
@@ -156,6 +156,7 @@ class DB_connection():
                 cursor.execute("INSERT INTO public.artist_genres(a_id,g_id) VALUES (%s,%s)",(a_id,g_id))
                 conn.commit()
                 conn.close()
+        print(f"Done")
         return None
 if __name__=="__main__":
     db = DB_connection()

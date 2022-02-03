@@ -2,13 +2,12 @@
 
 import React, {useState} from "react"
 import Songcloud from "./Songcloud";
-function Insights() {
+function Insights({user_id}) {
 
  
   return (
-    <div className="Insights">
-        <h1>Insights!</h1>
-        <Songcloud/>
+    <div className="Insigh">
+        <Songcloud user_id={user_id}/>
    
     </div>
     );

@@ -263,3 +263,6 @@ p {
   align-items: center;
   
 }
+a:link {
+  color:inherit;
+}
