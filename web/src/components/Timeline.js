@@ -1,6 +1,4 @@
-import UserForm from "./UserForm";
 import Card from "./Card";
-import SortMenu from "./SortMenu";
 import React, {useEffect, useState} from "react"
 import TrackList from "./TrackList";
 
@@ -15,7 +13,6 @@ function Timeline({setUserId}) {
   const [isfinishedSort, setFinishedSort] = useState(false)
   
   useEffect( () => {setSortedList(organizeCards())}, [isLoaded]);
-  
   useEffect(()=>{
     setError(null)
       fetch(`http://192.168.1.72:5001/user/khayelc`,
@@ -47,7 +44,6 @@ function Timeline({setUserId}) {
       let year = parseInt(dateVal[3]);
       let month = dateVal[1];
       let day = parseInt(dateVal[2]);
-
 
       if (!(year in sortedObj)){
         sortedObj[year] = {}

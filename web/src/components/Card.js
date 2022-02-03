@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useRef} from "react"
-import {IoChevronForwardOutline,IoEllipse, IoChevronUp} from "react-icons/io5"
+import {IoChevronForwardOutline,IoEllipse} from "react-icons/io5"
 
 
 function Card(props){
@@ -26,7 +26,6 @@ function Card(props){
       }
   })
     let displayIcon = <IoChevronForwardOutline/>
-   
 
     useEffect( ()=> {
         if (props.cardType === "cardYear"){
@@ -35,8 +34,9 @@ function Card(props){
         }
 
     }, [])
-    if(displayMode ==='maximized'){ displayIcon = <IoEllipse/>}else{ displayIcon = <IoChevronForwardOutline/>}
-    
+
+    (displayMode ==='maximized') ?  displayIcon = <IoEllipse/> : displayIcon = <IoChevronForwardOutline/>;
+
         return (
             <div ref={cardRef} className={props.isSelected ? `card ${props.cardType} card-maximized `:`card ${props.cardType} card-${displayMode} `}  onClick={maximizeCard} >
                 <div className="upper">

@@ -1,13 +1,9 @@
 # TODO user case to create a scrobbler account
-# TODO visualize data in tableau
-# TODO embed tableau dashboard
-#FIXME remove case sensitivity for usernames
-from re import T
-from flask import Flask, request, redirect, jsonify,session
+from flask import Flask
 from flask.templating import render_template
 import scrobbler
 import threading
-import uuid
+import config
 app = Flask(__name__)
 
 
@@ -57,5 +53,5 @@ def after_request(response):
 
 
 if __name__=="__main__":
-    app.secret_key = 'jdsakfdsjklvnselg'
+    app.secret_key = config.APP_SECRET
     app.run(debug=True, host='0.0.0.0', port=5001)

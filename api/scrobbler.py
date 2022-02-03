@@ -1,29 +1,18 @@
-
-# TODO Redo tables with relevant data...for Tableau analytics and additional data
-# TODO user authentication
-
-#TODO embed tableau 
-#TODO user implementation
 import requests
-import pandas as pd
 import dbconnection as db
-from datetime import datetime
 import threading
 import base64
+import config
 
-API_KEY = "8f17f6e08c0b52d7a6e0388750ca746b"
-SECRET = "c14bdb3a0b57d7504fb55ac43dde48d0"
-SPOTIFY_CLIENT_ID = "6a2e3c67318242efada57ffb80ea4ec7"
-SPOTIFY_SECRET = "98638d4147bd4c3db49d3ab38759b9b7"
+API_KEY = config.API_KEY
+SECRET = config.SECRET
+SPOTIFY_CLIENT_ID = config.SPOTIFY_CLIENT_ID
+SPOTIFY_SECRET = config.SECRET
 
 
-
+#for new user
 def get_recent_tracks_full(username,user_id):
-    #TODO add check for non existing user.
     conn = db.DB_connection()
-    #FIXME implement return of new user of user id
-    # user_id = conn.new_user(username)
-    # only use for initial run.
     r = requests.get(
             "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200".format(username, API_KEY))
     num_pages = r.json()['recenttracks']['@attr']['totalPages']
@@ -36,15 +25,12 @@ def get_recent_tracks_full(username,user_id):
         r = requests.get(
                 "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200&page={}".format(username, API_KEY, page))
         tracks_on_page = r.json()['recenttracks']['track']
-        for ind, track in enumerate(tracks_on_page):
+        for track in enumerate(tracks_on_page):
             new_tracks.append(track)
         if new_tracks:
                 artists = [artist['artist']['#text'] for artist in new_tracks]
-                conn.update_tracks_played(new_tracks,user_id)
-                        #only care about unique artist to improve speed of genre gathering...
-                        #TODO update tracksp playes should be updated to use artist_id...
+                conn.update_tracks_played(new_tracks,user_id)  
                 artists = set(artists)
-                        #this takes time so do in another thread...
                 th = threading.Thread(target=get_genres, args=(set(artists),))
                 th.start()
         else:
@@ -61,6 +47,7 @@ def get_track_info(track):
         track_details = requests.get('http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={}&artist={}&track={}&format=json'.format(API_KEY, track['artist']['#text'],)).json()
     except:
         track_details = None
+
     track_info[track['name']] = track_details
     return track_info
     
@@ -71,16 +58,13 @@ def update_recent_tracks_incremental(username,user_id):
     print(f"Updating track list for user {username}")
     conn = db.DB_connection()
     recent_track = conn.get_most_recent_track(username)
-    #TODO condition where this is far back?
     if recent_track: 
-        # remove None column(user_id?) make datetime consistent
         recent_track_fix = (recent_track[0], recent_track[1], recent_track[3].strftime("%d %b %Y, %H:%M"))
         print("looking for " + str(recent_track_fix))
         r = requests.get(
             "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={}&api_key={}&format=json&limit=200".format(username, API_KEY))
         num_pages = r.json()['recenttracks']['@attr']['totalPages']
-        print(
-            f"There are {num_pages} pages")
+        print(f"There are {num_pages} pages")
         new_tracks = []
         for page in range(1, int(num_pages)+1):
             print("on page: " + str(page))
@@ -94,10 +78,8 @@ def update_recent_tracks_incremental(username,user_id):
                     if new_tracks:
                         artists = [artist['artist']['#text'] for artist in new_tracks]
                         conn.update_tracks_played(new_tracks,user_id)
-                        #only care about unique artist to improve speed of genre gathering...
-                        #TODO update tracksp playes should be updated to use artist_id...
+                        #only care about unique artist and run in another thread to improve speed.
                         artists = set(artists)
-                        #this takes time so do in another thread...
                         th = threading.Thread(target=get_genres, args=(set(artists),))
                         th.start()
                         return True
@@ -105,10 +87,6 @@ def update_recent_tracks_incremental(username,user_id):
                         print("No new tracks...")
                         return False
             new_tracks += track
-    #update get corresponding genre via spotify api
-    #auth
-
-   
     return False
 
 def is_existing_user(username):
@@ -120,7 +98,6 @@ def get_played_tracks(user_id):
     return conn.get_all_user_tracks(user_id)
 
 def create_list():
-    
     conn = db.DB_connection()
     return conn.get_all_tracks()
 
@@ -140,6 +117,7 @@ def get_genres(artists):
     headers = { 'Authorization': f'Bearer {auth_token}'}
     
     artist_information = {artist: {'genres': []} for artist in artists}
+    
     #get spotify id of artists
     for artist in artists:
         artist_request = requests.get(f"https://api.spotify.com/v1/search?limit=1&type=artist&q={artist.replace(' ','%20')}",headers=headers).json()
@@ -149,18 +127,5 @@ def get_genres(artists):
     for artist in artist_information:
         conn.update_genres(artist, artist_information[artist]['genres'])
         
-
-    #TODO verify if artist or genre is new in artist and genre tables...
-    #if new then enter in to table
-    #into entries table create new record with id of genre and artist.
-
-    #should modify songs played to use artist_id...
-    #for genres by day, join tracks played with the artistgenre based on artist and then get genres using genre id
 if __name__ == "__main__":
-    #recent_tracks = get_recent_tracks_full()
-    #tracks = recent_tracks['recenttracks']['track']
-    #print(tracks)
-    #print(type(tracks))
-
-    # db.update_tracks_played(tracks)
     get_genres(['Childish Gambino'])

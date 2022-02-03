@@ -6,7 +6,7 @@ from datetime import datetime
 class DB_connection():
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
+        self.config.read('db_config.ini')
 
     def connect(self):
         return psycopg2.connect(user=self.config['postgres']['user'],
@@ -29,10 +29,6 @@ class DB_connection():
                     "%d %b %Y, %H:%M"),user_id)
     def update_tracks_played(self, tracks_played,user_id):
         track_list = [self.clean_timestamps(track,user_id) for track in tracks_played]
-        
-        #check list of stuff to insert
-        # for i in range(len(track_list)-1,-1,-1):
-        #     print(str(i) + str(track_list[i]))
         print('Inserting {} new records into the database...'.format(len(track_list)))
         try:
             conn = self.connect()
@@ -62,7 +58,6 @@ class DB_connection():
             
 
     def get_most_recent_track(self, username='null'):
-
         try:
             conn = self.connect()
             cursor = conn.cursor()
@@ -78,7 +73,6 @@ class DB_connection():
         finally:
             return result
     def get_all_user_tracks(self, user_id=0):
-
         try:
             conn = self.connect()
             cursor = conn.cursor()
@@ -111,7 +105,6 @@ class DB_connection():
             return None
     def update_genres(self, artist, genres):
         print(f"Inserting {artist}")
-        #TODO insert artist and genre, if not exists in artist/genre table, get ID
         try:
             conn = self.connect()
             cursor = conn.cursor()
@@ -129,10 +122,8 @@ class DB_connection():
         finally:
             conn.commit()
             conn.close()
-
-
         g_ids = []
-        for genre in genres:#try threading here?
+        for genre in genres:
             try:
                 conn = self.connect()
                 cursor = conn.cursor()
@@ -147,8 +138,6 @@ class DB_connection():
             finally:
                 conn.commit()
                 conn.close()
-
-        #TODO insert into artist_genres a_id and g_id for every g_id
         if not artist_exists:
             for g_id in g_ids:
                 conn = self.connect()
