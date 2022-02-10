@@ -15,7 +15,7 @@ function Timeline({setUserId}) {
   useEffect( () => {setSortedList(organizeCards())}, [isLoaded]);
   useEffect(()=>{
     setError(null)
-      fetch(`http://192.168.1.72:5001/user/khayelc`,
+      fetch(`https://listenerinsights.s3.amazonaws.com/sample.json`,
       { headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'

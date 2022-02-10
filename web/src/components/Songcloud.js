@@ -7,18 +7,15 @@ function Songcloud({user_id}) {
         device:"desktop",
         width: "100vW",
         height: "100vH",
-        "User Id": user_id
+        "User Id": 3
     }
     // function filterUser(){
     //     vizRef.current().Viz().getWorkbook().changeParameterValueAsync('user_id', user_id).then(
     //         function (){ console.log('Parameter set');}
     //         );
     // }
-    function initViz() {
-        
+    function initViz() {    
         new tableau.Viz(vizRef.current, url, options)
-        // filterUser();
-        
     }
 
     useEffect ( () => {

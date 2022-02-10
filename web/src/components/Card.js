@@ -33,7 +33,7 @@ function Card(props){
     
         }
 
-    }, [])
+    }, []);
 
     (displayMode ==='maximized') ?  displayIcon = <IoEllipse/> : displayIcon = <IoChevronForwardOutline/>;
 
