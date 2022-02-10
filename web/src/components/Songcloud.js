@@ -5,9 +5,9 @@ function Songcloud({user_id}) {
     const url = "https://public.tableau.com/views/test_16402021326920/Dashboard3?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link"
     const options = {
         device:"desktop",
-        width: "100vW",
         height: "100vH",
-        "User Id": 3
+        width: "47W",
+        "User Id": user_id
     }
     // function filterUser(){
     //     vizRef.current().Viz().getWorkbook().changeParameterValueAsync('user_id', user_id).then(
