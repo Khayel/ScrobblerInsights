@@ -6283,3 +6283,10 @@ api/__pycache__/scrobbler.cpython-39.pyc
 api/.vscode/settings.json
 api/requirements.txt
 .DS_Store
+api/config.py
+api/db_config.ini
+api/dbconnection.py
+api/zappa_settings.json
+api/credentials
+sample.json
+.gitignore
