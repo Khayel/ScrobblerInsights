@@ -6,7 +6,7 @@ function Songcloud({user_id}) {
     const options = {
         device:"desktop",
         height: "100vH",
-        width: "47W",
+        width: "47vW",
         "User Id": user_id
     }
     // function filterUser(){
